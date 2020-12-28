@@ -1,0 +1,19 @@
+object DataModule1: TDataModule1
+  OldCreateOrder = False
+  Height = 169
+  Width = 433
+  object FDConexao: TFDConnection
+    Params.Strings = (
+      
+        'Database=E:\Users\Suporte PC\Desktop\Delphi\ProjetosGitHub\Agend' +
+        'a\DB\SSYSTEM.FDB'
+      'User_Name=SYSDBA'
+      'Password=masterkey'
+      'Server=127.0.0.1'
+      'Port=3050'
+      'Protocol=TCPIP'
+      'DriverID=FB')
+    Left = 104
+    Top = 32
+  end
+end

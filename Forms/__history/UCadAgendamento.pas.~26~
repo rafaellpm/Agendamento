@@ -1,0 +1,120 @@
+unit UCadAgendamento;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, UCadPai, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  Vcl.StdCtrls, Vcl.ComCtrls, Data.DB, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client, Vcl.Buttons, Vcl.ExtCtrls, Vcl.WinXPickers,
+  FireDAC.UI.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys,
+  FireDAC.Phys.FB, FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait;
+
+type
+  TFrmCadAgendamento = class(TFrmCadPai)
+    EdtCodCliente: TEdit;
+    EdtNome: TEdit;
+    DTAgendamento: TDateTimePicker;
+    EdtCodProcedimento: TEdit;
+    EdtProcedimento: TEdit;
+    CBSituacao: TComboBox;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    TimeHorario: TTimePicker;
+    Label8: TLabel;
+    EdtContato: TEdit;
+    Label1: TLabel;
+    procedure insereagendamento;
+    procedure BtnSalvarClick(Sender: TObject);
+    procedure EdtCodClienteKeyPress(Sender: TObject; var Key: Char);
+    procedure FormCreate(Sender: TObject);
+    procedure EdtCodProcedimentoKeyPress(Sender: TObject; var Key: Char);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmCadAgendamento: TFrmCadAgendamento;
+
+implementation
+
+uses
+  UConsultaCliente, UConsultaProced;
+
+{$R *.dfm}
+
+procedure TFrmCadAgendamento.BtnSalvarClick(Sender: TObject);
+begin
+  inherited;
+  insereagendamento;
+end;
+
+procedure TFrmCadAgendamento.EdtCodClienteKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  inherited;
+  FrmConsultaCliente := TFrmConsultaCliente.Create(self);
+  try
+    FrmConsultaCliente.Tag := 0;
+    FrmConsultaCliente.ShowModal;
+  finally
+    FreeAndNil(FrmConsultaCliente);
+  end;
+end;
+
+procedure TFrmCadAgendamento.EdtCodProcedimentoKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  inherited;
+  FrmConsultaProced := TFrmConsultaProced.Create(self);
+  try
+    FrmConsultaProced.Tag := 1;
+    FrmConsultaProced.ShowModal;
+  finally
+    FreeAndNil(FrmConsultaProced);
+  end;
+end;
+
+procedure TFrmCadAgendamento.FormCreate(Sender: TObject);
+begin
+  inherited;
+  DTAgendamento.Date := now;
+end;
+
+procedure TFrmCadAgendamento.insereagendamento;
+var _data: TDate;
+begin
+  _data := now;
+  FDQuery1.close;
+  FDQuery1.SQL.Clear;
+  FDQuery1.SQL.Add('INSERT INTO AGENDA ');
+  FDQuery1.SQL.Add('(COD_CLIENTE, CLIENTE, ID_SERVICO, DATA_AGENDAMENTO, CONTATO, SITUACAO, HR_INICIO, DIA_AGENDADO)');
+  FDQuery1.SQL.Add('values ');
+  FDQuery1.SQL.Add('(:COD_CLIENTE, :CLIENTE, :ID_SERVICO, :DATA_AGENDAMENTO, :CONTATO, :SITUACAO, :HR_INICIO, :DIA_AGENDADO)');
+  FDQuery1.Params.ParamByName('COD_CLIENTE').Value := StrToInt(EdtCodCliente.Text);
+  FDQuery1.Params.ParamByName('CLIENTE').Value := EdtNome.Text;
+  FDQuery1.Params.ParamByName('ID_SERVICO').Value := EdtCodProcedimento.Text;
+  FDQuery1.Params.ParamByName('DATA_AGENDAMENTO').Value := DateToStr(_data);
+  FDQuery1.Params.ParamByName('CONTATO').Value := EdtContato.Text;
+  FDQuery1.Params.ParamByName('SITUACAO').Value := CBSituacao.Text;
+  FDQuery1.Params.ParamByName('HR_INICIO').Value := TimeToStr(TimeHorario.Time);
+  FDQuery1.Params.ParamByName('DIA_AGENDADO').Value := DateToStr(DTAgendamento.Date);
+
+  FDQuery1.ExecSQL;
+
+  EdtCodCliente.Text := '';
+  EdtNome.Text := '';
+  EdtCodProcedimento.Text := '';
+  EdtContato.Text := '';
+
+end;
+
+end.

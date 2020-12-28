@@ -1,0 +1,107 @@
+unit UConsultaCliente;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, UConsultaPai, Data.DB,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, FireDAC.Comp.DataSet,
+  Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls;
+
+type
+  TFrmConsultaCliente = class(TFrmConsultaPai)
+    CheckInativo: TCheckBox;
+    procedure CheckInativoClick(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
+    procedure DBGrid1KeyPress(Sender: TObject; var Key: Char);
+    procedure DBGrid1DblClick(Sender: TObject);
+  private
+    { Private declarations }
+    procedure Carregadados;
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmConsultaCliente: TFrmConsultaCliente;
+
+implementation
+
+uses
+  UConexao, UCadAgendamento;
+
+{$R *.dfm}
+
+procedure TFrmConsultaCliente.BitBtn1Click(Sender: TObject);
+var _cons,_inativo : string;
+
+begin
+  inherited;
+  sqlstr := '';
+  FDQuery1.close;
+  FDQuery1.SQL.Clear;
+
+  if CheckInativo.Checked = True then
+    _inativo := ' where ATIVO = 0'
+  else
+    _inativo := ' where ATIVO = 1';
+
+  if Trim(CbConsultarPor.Text) = 'Nome' then
+    _cons :=' and NOME like '+ QuotedStr(EdtConsulta.Text+'%')
+
+  else
+  if Trim(CbConsultarPor.Text) = 'Cod.Interno' then
+    _cons := ' and COD_CLIENTE = ' + QuotedStr(EdtConsulta.Text)
+
+  else
+  if Trim(CbConsultarPor.Text) = 'CPF' then
+    _cons := ' and CPF = ' + QuotedStr(EdtConsulta.Text);
+
+  sqlstr := 'SELECT * FROM CLIENTES ' +_inativo + _cons;
+  ConsultaMySql(FDQuery1,sqlstr);
+end;
+
+procedure TFrmConsultaCliente.Carregadados;
+begin
+  if not FDQuery1.IsEmpty then
+  begin
+
+    if FrmConsultaCliente.Tag = 0 then
+    begin
+      FrmCadAgendamento.EdtCodCliente.Text := FDQuery1.FieldByName('COD_CLIENTE').AsString;
+    end;
+    FrmConsultaCliente.Close;
+  end;
+end;
+
+procedure TFrmConsultaCliente.CheckInativoClick(Sender: TObject);
+var _inativo: string;
+begin
+  inherited;
+  if CheckInativo.Checked = True then
+    _inativo := ' where ATIVO = 0'
+  else
+    _inativo := ' where ATIVO = 1';
+
+  sqlstr := 'SELECT * FROM CLIENTES ' + _inativo ;
+  ConsultaMySql(FDQuery1,sqlstr);
+
+end;
+
+procedure TFrmConsultaCliente.DBGrid1DblClick(Sender: TObject);
+begin
+  inherited;
+  Carregadados();
+end;
+
+procedure TFrmConsultaCliente.DBGrid1KeyPress(Sender: TObject; var Key: Char);
+begin
+  inherited;
+  if KEY =#13 then
+    Carregadados();
+
+end;
+
+end.

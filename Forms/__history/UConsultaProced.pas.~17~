@@ -1,0 +1,81 @@
+unit UConsultaProced;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, UConsultaPai, Data.DB,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, FireDAC.Comp.DataSet,
+  Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls;
+
+type
+  TFrmConsultaProced = class(TFrmConsultaPai)
+    CheckInativo: TCheckBox;
+    procedure BitBtn1Click(Sender: TObject);
+    procedure Carregadados;
+    procedure DBGrid1DblClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmConsultaProced: TFrmConsultaProced;
+
+implementation
+
+uses
+  UConexao, UCadAgendamento, UCadProced;
+
+{$R *.dfm}
+
+procedure TFrmConsultaProced.BitBtn1Click(Sender: TObject);
+var _inativo: string;
+begin
+  inherited;
+  if CheckInativo.Checked = True then
+    _inativo := ' AND ATIVO = "NAO"'
+  else
+    _inativo := ' AND ATIVO = "SIM"';
+
+
+  sqlstr := 'SELECT * FROM PROCEDIMENTOS WHERE DESCRICAO LIKE ' + QuotedStr(EdtConsulta.Text + '%') +  _inativo;
+
+  ConsultaMySql(FdQuery1, sqlstr);
+
+end;
+
+procedure TFrmConsultaProced.Carregadados;
+begin
+  if not FDQuery1.IsEmpty then
+  begin
+     //     CONSULTA CADASTRO DE AGENDAMENTO     //
+    if FrmConsultaProced.Tag = 0 then
+    begin
+      FrmCadAgendamento.EdtCodProcedimento.Text := FDQuery1.FieldByName('CODIGO').AsString;
+      FrmCadAgendamento.EdtProcedimento.Text := FDQuery1.FieldByName('DESCRICAO').AsString;
+    end
+
+    //      CONSULTA CADASTRO AGENDAMENTO       //
+
+    else
+    if FrmCadProced.Tag = 1 then
+      FrmCadProced.EdtCodInterno.Text := FDQuery1.FieldByName('CODIGO').AsString;
+      FrmCadProced.EdtNomeProc.Text := FDQuery1.FieldByName('DESCRICAO').AsString;
+
+      //     FECHAR APÓS SELECIONAR             //
+    FrmConsultaProced.Close;
+
+  end;
+end;
+
+procedure TFrmConsultaProced.DBGrid1DblClick(Sender: TObject);
+begin
+  inherited;
+  Carregadados;
+end;
+
+end.

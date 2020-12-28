@@ -1,0 +1,218 @@
+inherited FrmCadProced: TFrmCadProced
+  Caption = 'Cadastrar Procedimento'
+  ClientHeight = 367
+  ClientWidth = 417
+  OnCreate = FormCreate
+  ExplicitWidth = 433
+  ExplicitHeight = 406
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label2: TLabel [0]
+    Left = 361
+    Top = 67
+    Width = 25
+    Height = 13
+    Caption = 'Ativo'
+  end
+  object Label1: TLabel [1]
+    Left = 60
+    Top = 67
+    Width = 46
+    Height = 13
+    Caption = 'Descri'#231#227'o'
+  end
+  object Label3: TLabel [2]
+    Left = 8
+    Top = 112
+    Width = 164
+    Height = 13
+    Alignment = taCenter
+    Caption = 'Produtos Usados no Procedimento'
+  end
+  object Label4: TLabel [3]
+    Left = 314
+    Top = 112
+    Width = 18
+    Height = 13
+    Alignment = taCenter
+    Caption = 'Qtd'
+  end
+  object Label5: TLabel [4]
+    Left = 8
+    Top = 67
+    Width = 23
+    Height = 13
+    Caption = 'Cod.'
+  end
+  inherited Panel1: TPanel
+    Width = 417
+    ExplicitWidth = 417
+    inherited BtnSalvar: TBitBtn
+      OnClick = BtnSalvarClick
+    end
+    inherited BtnConsultar: TBitBtn
+      OnClick = BitBtn2Click
+    end
+    inherited BtnExcluir: TBitBtn
+      OnClick = BtnExcluirClick
+    end
+    inherited BtnSair: TBitBtn
+      Left = 355
+      ExplicitLeft = 355
+    end
+  end
+  object EdtNomeProc: TEdit [6]
+    Left = 60
+    Top = 80
+    Width = 295
+    Height = 21
+    TabOrder = 2
+  end
+  object CBAtivo: TComboBox [7]
+    Left = 361
+    Top = 80
+    Width = 48
+    Height = 21
+    ItemIndex = 0
+    TabOrder = 3
+    Text = 'SIM'
+    Items.Strings = (
+      'SIM'
+      'N'#195'O')
+  end
+  object DBGrid1: TDBGrid [8]
+    Left = 0
+    Top = 157
+    Width = 417
+    Height = 210
+    TabStop = False
+    Align = alBottom
+    DataSource = DataSource1
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit, dgMultiSelect, dgTitleClick, dgTitleHotTrack]
+    TabOrder = 8
+    TitleFont.Charset = DEFAULT_CHARSET
+    TitleFont.Color = clWindowText
+    TitleFont.Height = -11
+    TitleFont.Name = 'Tahoma'
+    TitleFont.Style = []
+    Columns = <
+      item
+        Expanded = False
+        FieldName = 'p.id_produto'
+        Title.Caption = 'Cod Interno'
+        Width = 62
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'p.descricao'
+        Title.Caption = 'Descri'#231#227'o'
+        Width = 269
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'u.Qtd_uso_procedimento'
+        Title.Caption = 'Qtd'
+        Width = 53
+        Visible = True
+      end>
+  end
+  object EdtCodProd: TEdit [9]
+    Left = 8
+    Top = 128
+    Width = 49
+    Height = 21
+    TabOrder = 4
+    OnKeyPress = EdtCodProdKeyPress
+  end
+  object EdtDescProd: TEdit [10]
+    Left = 60
+    Top = 128
+    Width = 248
+    Height = 21
+    Enabled = False
+    TabOrder = 5
+  end
+  object BitBtn1: TBitBtn [11]
+    Left = 361
+    Top = 126
+    Width = 48
+    Height = 25
+    Glyph.Data = {
+      36040000424D3604000000000000360000002800000010000000100000000100
+      2000000000000004000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000C0E0A1500000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000000000000031362652909F70F32D32234C000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000003136265293A373F997A776FF93A373F92B3022490000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000003136265293A373F997A776FF97A776FF97A776FF93A273F82B2F
+      2148000000000000000000000000000000000000000000000000000000000000
+      00003136265393A373F997A776FF91A071F54951397B93A273F897A776FF93A2
+      73F82B2F21480000000000000000000000000000000000000000000000000506
+      0409839166DD97A776FF91A071F5262A1E40000000002B2F214893A273F897A7
+      76FF93A273F82B30224900000000000000000000000000000000000000000000
+      000015171023808D64D8262A1E400000000000000000000000002B2F214893A2
+      73F897A776FF93A273F82B302249000000000000000000000000000000000000
+      0000000000000202010300000000000000000000000000000000000000002B2F
+      214893A273F897A776FF93A273F82B3022490000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      00002B2F214893A273F897A776FF93A273F82B30224900000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000002B2F214893A273F897A776FF76825CC701010001000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      000000000000000000002B2F214875825CC60B0C081200000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000010100010000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000000000000000
+      0000000000000000000000000000000000000000000000000000}
+    TabOrder = 7
+    OnClick = BitBtn1Click
+  end
+  object EdtQtdProd: TEdit [12]
+    Left = 314
+    Top = 128
+    Width = 41
+    Height = 21
+    TabOrder = 6
+  end
+  object EdtCodInterno: TEdit [13]
+    Left = 8
+    Top = 80
+    Width = 49
+    Height = 21
+    TabOrder = 1
+  end
+  inherited FDTransaction1: TFDTransaction
+    Left = 223
+    Top = 7
+  end
+  inherited FDQuery1: TFDQuery
+    Left = 265
+    Top = 5
+  end
+  object FDConsulta: TFDQuery
+    Connection = DataModule1.FDConexao
+    Transaction = FDTransaction1
+    SQL.Strings = (
+      
+        'select p.id_produto, p.descricao, u.Qtd_uso_procedimento from it' +
+        'em_procedimento as u inner join produtos as p on u.cod_produto =' +
+        ' p.id_produto')
+    Left = 350
+    Top = 200
+  end
+  object DataSource1: TDataSource
+    DataSet = FDConsulta
+    Left = 343
+    Top = 258
+  end
+end

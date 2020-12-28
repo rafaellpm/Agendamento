@@ -1,0 +1,58 @@
+unit UConsultaProduto;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, UConsultaPai, Data.DB,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, FireDAC.Comp.DataSet,
+  Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls;
+
+type
+  TFrmConsultaProduto = class(TFrmConsultaPai)
+    CheckBox1: TCheckBox;
+    procedure BitBtn1Click(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmConsultaProduto: TFrmConsultaProduto;
+
+
+implementation
+
+uses
+  UConexao;
+
+
+{$R *.dfm}
+
+procedure TFrmConsultaProduto.BitBtn1Click(Sender: TObject);
+var _cons : string;
+
+begin
+  inherited;
+  sqlstr := '';
+  FDQuery1.close;
+  FDQuery1.SQL.Clear;
+  if Trim(CbConsultarPor.Text) = 'DESCRICAO' then
+    _cons :='WHERE DESCRICAO like '+ QuotedStr(EdtConsulta.Text)
+
+  else
+  if Trim(CbConsultarPor.Text) = 'Cod.Interno' then
+    _cons := 'WHERE ID_PRODUTO = ' + QuotedStr(EdtConsulta.Text)
+
+  else
+  if Trim(CbConsultarPor.Text) = 'Cod.Barras' then
+    _cons := 'WHERE COD_EAN = ' + QuotedStr(EdtConsulta.Text);
+
+  sqlstr := 'SELECT * FROM PRODUTOS ' + _cons + ' AND ATIVO = 1 ';
+  ConsultaMySql(FDQuery1,sqlstr);
+end;
+
+end.

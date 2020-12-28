@@ -1,0 +1,89 @@
+inherited FrmConsultaCliente: TFrmConsultaCliente
+  Caption = 'Consultar Cliente'
+  ClientWidth = 731
+  ExplicitWidth = 747
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited Panel1: TPanel
+    Width = 731
+    inherited Label1: TLabel
+      Left = 8
+      ExplicitLeft = 8
+    end
+    inherited EdtConsulta: TEdit
+      Left = 122
+      Width = 514
+      ExplicitLeft = 122
+      ExplicitWidth = 514
+    end
+    inherited BitBtn1: TBitBtn
+      Left = 642
+      OnClick = BitBtn1Click
+      ExplicitLeft = 642
+    end
+    inherited CbConsultarPor: TComboBox
+      Left = 8
+      ItemIndex = 0
+      Text = 'Nome'
+      Items.Strings = (
+        'Nome'
+        'CPF'
+        'Cod.Interno')
+      ExplicitLeft = 8
+    end
+    object CheckInativo: TCheckBox
+      Left = 642
+      Top = 6
+      Width = 56
+      Height = 17
+      Caption = 'Inativos'
+      TabOrder = 3
+      OnClick = CheckInativoClick
+    end
+  end
+  inherited DBGrid1: TDBGrid
+    Width = 731
+    OnDblClick = DBGrid1DblClick
+    OnKeyPress = DBGrid1KeyPress
+    Columns = <
+      item
+        Expanded = False
+        FieldName = 'COD_CLIENTE'
+        Title.Alignment = taCenter
+        Title.Caption = 'ID'
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'NOME'
+        Width = 350
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'CPF'
+        Width = 180
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'DATA_CADASTRO'
+        Width = 100
+        Visible = True
+      end>
+  end
+  inherited FDQuery1: TFDQuery
+    SQL.Strings = (
+      'Select * from Clientes')
+    Left = 635
+    Top = 105
+  end
+  inherited FDTransaction1: TFDTransaction
+    Left = 642
+    Top = 156
+  end
+  inherited DataSource1: TDataSource
+    Left = 645
+    Top = 223
+  end
+end

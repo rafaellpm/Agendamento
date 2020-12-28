@@ -1,0 +1,48 @@
+unit UConsultaPai;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.Grids, Vcl.DBGrids,
+  Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls;
+
+type
+  TFrmConsultaPai = class(TForm)
+    Panel1: TPanel;
+    EdtConsulta: TEdit;
+    BitBtn1: TBitBtn;
+    CbConsultarPor: TComboBox;
+    Label1: TLabel;
+    DBGrid1: TDBGrid;
+    FDQuery1: TFDQuery;
+    FDTransaction1: TFDTransaction;
+    DataSource1: TDataSource;
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmConsultaPai: TFrmConsultaPai;
+
+implementation
+
+uses
+  UConexao;
+
+{$R *.dfm}
+
+procedure TFrmConsultaPai.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+if Key = VK_RETURN then
+   perform(WM_NEXTDLGCTL,0,0);
+end;
+
+end.

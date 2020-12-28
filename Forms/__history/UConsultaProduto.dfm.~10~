@@ -1,0 +1,84 @@
+inherited FrmConsultaProduto: TFrmConsultaProduto
+  Caption = 'FrmConsultaProduto'
+  ClientWidth = 730
+  ExplicitWidth = 746
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited Panel1: TPanel
+    Width = 730
+    ExplicitWidth = 715
+    inherited EdtConsulta: TEdit
+      Width = 516
+      TabOrder = 3
+      ExplicitWidth = 516
+    end
+    inherited BitBtn1: TBitBtn
+      Left = 650
+      OnClick = BitBtn1Click
+      ExplicitLeft = 650
+    end
+    object CheckBox1: TCheckBox
+      Left = 650
+      Top = 4
+      Width = 97
+      Height = 17
+      TabStop = False
+      Caption = 'Inativos'
+      TabOrder = 0
+      OnClick = CheckBox1Click
+    end
+  end
+  inherited DBGrid1: TDBGrid
+    Width = 730
+    Columns = <
+      item
+        Expanded = False
+        FieldName = 'ID_PRODUTO'
+        Title.Caption = 'ID'
+        Width = 40
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'DESCRICAO'
+        Title.Caption = 'DESCRICAO PRODUTO'
+        Width = 300
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'PRECO_CUSTO'
+        Title.Caption = 'ESTOQUE'
+        Width = 40
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'PRECO_VENDA'
+        Title.Caption = 'P. CUSTO'
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'QTD_ESTOQUE'
+        Title.Caption = 'P. VENDA'
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'DATA_CADASTRO'
+        Title.Caption = 'DATA CADASTRO'
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'ULTIMA_ALTERACAO'
+        Title.Caption = 'ULTIMA ALTERACAO'
+        Visible = True
+      end>
+  end
+  inherited FDQuery1: TFDQuery
+    SQL.Strings = (
+      'select * from produtos;')
+  end
+end

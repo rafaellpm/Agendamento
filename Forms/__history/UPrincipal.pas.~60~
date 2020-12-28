@@ -1,0 +1,214 @@
+unit UPrincipal;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids,
+  Vcl.StdCtrls, Vcl.ComCtrls, Vcl.Buttons, Vcl.ExtCtrls, UConexao,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, FireDAC.Comp.DataSet, UCadCliente,
+  Vcl.Menus;
+
+type
+  TFrmPrincipal = class(TForm)
+    Panel1: TPanel;
+    EdtNome: TEdit;
+    CBSituacao: TComboBox;
+    BtnFiltrar: TBitBtn;
+    DTInicial: TDateTimePicker;
+    DTFinal: TDateTimePicker;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    DBGrid1: TDBGrid;
+    BitBtn1: TBitBtn;
+    BitBtn4: TBitBtn;
+    Label4: TLabel;
+    BitBtn5: TBitBtn;
+    FDQuery1: TFDQuery;
+    DataSource1: TDataSource;
+    BtnProduto: TBitBtn;
+    BitBtn6: TBitBtn;
+    BtnFornecedor: TBitBtn;
+    FDTransaction1: TFDTransaction;
+    PopupMenu1: TPopupMenu;
+    Iniciar1: TMenuItem;
+    FinalizarAtendimento1: TMenuItem;
+    Remarcar1: TMenuItem;
+    Cancelar1: TMenuItem;
+    FDQuery2: TFDQuery;
+    Timer1: TTimer;
+    procedure BtnFiltrarClick(Sender: TObject);
+    procedure BitBtn5Click(Sender: TObject);
+    procedure BitBtn6Click(Sender: TObject);
+    procedure BtnFornecedorClick(Sender: TObject);
+    procedure BtnProdutoClick(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
+    procedure consultaagendamento;
+    procedure Cancelar1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure Iniciar1Click(Sender: TObject);
+    procedure FinalizarAtendimento1Click(Sender: TObject);
+  private
+
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmPrincipal: TFrmPrincipal;
+
+implementation
+
+uses
+  UCadProduto, UCadForn, UCadAgendamento;
+
+{$R *.dfm}
+
+procedure TFrmPrincipal.BitBtn1Click(Sender: TObject);
+begin
+  FrmCadAgendamento := TFrmCadAgendamento.Create(self);
+  try
+    FrmCadAgendamento.ShowModal;
+  finally
+    FreeAndNil(FrmCadAgendamento);
+  end;
+end;
+
+procedure TFrmPrincipal.BitBtn5Click(Sender: TObject);
+begin
+  FrmCadCliente := TFrmCadCliente.Create(self);
+  try
+    FrmCadCliente.ShowModal;
+  finally
+    FreeAndNil(FrmCadCliente);
+  end;
+end;
+
+procedure TFrmPrincipal.BitBtn6Click(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TFrmPrincipal.BtnFiltrarClick(Sender: TObject);
+begin
+  consultaagendamento;
+  if CBSituacao.Text = 'ANDAMENTO' then
+    FinalizarAtendimento1.Enabled := True
+  else
+    FinalizarAtendimento1.Enabled := False;
+end;
+
+procedure TFrmPrincipal.BtnFornecedorClick(Sender: TObject);
+begin
+  FrmCadForn := TFrmCadForn.Create(self);
+  try
+    FrmCadForn.ShowModal;
+  finally
+    FreeAndNil(FrmCadForn);
+  end;
+end;
+
+procedure TFrmPrincipal.BtnProdutoClick(Sender: TObject);
+begin
+  FrmCadProd := TFrmCadProd.Create(self);
+  try
+    FrmCadProd.ShowModal;
+  finally
+    FreeAndNil(FrmCadProd);
+  end;
+end;
+
+procedure TFrmPrincipal.Cancelar1Click(Sender: TObject);
+
+begin
+  FDQuery2.Close;
+  FDQuery2.SQL.Clear;
+  FDQuery2.SQL.Add('UPDATE AGENDA SET SITUACAO = "CANCELADO" WHERE id_agendamento ='+FDQuery1.fieldbyname('id_agendamento').AsString);
+
+  FDQuery2.ExecSQL;
+
+end;
+
+procedure TFrmPrincipal.consultaagendamento;
+var data : TDate;
+    data1 : string;
+    data2 : string;
+    hora1 : String;
+    hora2 : String;
+
+begin
+  hora1 := '00:00:00';
+  hora2 := '23:59:00';
+  FDQuery1.close;
+  FDQuery1.SQL.Clear;
+  data := now;
+  sqlstr := '';
+  data1:= DateToStr(DTInicial.Date);
+  data2 := DateToStr(DTFinal.Date);
+
+
+  sqlstr := 'SELECT * FROM AGENDA WHERE DIA_AGENDADO BETWEEN ' + QuotedStr(data1) + ' AND ' + QuotedStr(data2) + ' AND CLIENTE LIKE ' + QuotedStr(EdtNome.Text + '%') + ' AND HR_INICIO BETWEEN ' + QuotedStr(hora1) + ' and ' + QuotedStr(hora2) + 'and situacao = ' + QuotedStr(CBSituacao.Text);
+
+  ConsultaMySql(FDQuery1,sqlstr);
+
+end;
+
+procedure TFrmPrincipal.FinalizarAtendimento1Click(Sender: TObject);
+var horario_finalizado: string;
+    tempo: TTime;
+    hr_inicio: String;
+    hr_final: String;
+begin
+  horario_finalizado:= TimeToStr(now);
+  FDQuery2.Close;
+  FDQuery2.SQL.Clear;
+  FDQuery2.SQL.Add('UPDATE AGENDA SET SITUACAO = "CONCLUIDO", HR_FINAL = ' + QuotedStr(horario_finalizado) + ' WHERE id_agendamento ='+FDQuery1.fieldbyname('id_agendamento').AsString);
+
+  FDQuery2.ExecSQL;
+
+  FDQuery2.Close;
+  FDQuery2.SQL.Clear;
+  hr_inicio := FDQuery1.fieldbyname('HR_INICIO').AsString;
+  tempo := StrToTime(hr_inicio) - StrToTime(horario_finalizado);
+
+  FDQuery2.SQL.Add('UPDATE AGENDA SET TEMPO_PROCEDIMENTO = ' + QuotedStr(TimeToStr(tempo)) + ' WHERE id_agendamento ='+FDQuery1.fieldbyname('id_agendamento').AsString);
+
+  FDQuery2.ExecSQL;
+end;
+
+procedure TFrmPrincipal.FormCreate(Sender: TObject);
+var data_hora1 : string;
+    data_hora2 : string;
+    hora1 : String;
+    hora2 : String;
+
+begin
+  hora1 := '00:00:00';
+  hora2 := '23:59:00';
+  data_hora1 := DateToStr(now);
+  data_hora2 := DateToStr(now+1);
+  DTInicial.DateTime := StrToDateTime(data_hora1 + ' ' + hora1);
+  DTFinal.DateTime := StrToDateTime(data_hora2 + ' ' + hora2);
+
+
+end;
+
+procedure TFrmPrincipal.Iniciar1Click(Sender: TObject);
+var horario_inicio: string;
+
+begin
+  horario_inicio := TimeToStr(now);
+  FDQuery2.Close;
+  FDQuery2.SQL.Clear;
+  FDQuery2.SQL.Add('UPDATE AGENDA SET SITUACAO = "ANDAMENTO", HR_INICIO = ' + QuotedStr(horario_inicio) + ' WHERE id_agendamento ='+FDQuery1.fieldbyname('id_agendamento').AsString);
+
+  FDQuery2.ExecSQL;
+end;
+
+
+
+end.

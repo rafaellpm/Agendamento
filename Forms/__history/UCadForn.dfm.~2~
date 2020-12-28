@@ -1,0 +1,145 @@
+inherited FrmCadForn: TFrmCadForn
+  Caption = 'Cadastro de Fornecedor'
+  ClientHeight = 222
+  ExplicitHeight = 261
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label1: TLabel [0]
+    Left = 8
+    Top = 69
+    Width = 52
+    Height = 13
+    Caption = 'Cod. Forn.'
+  end
+  object Label2: TLabel [1]
+    Left = 103
+    Top = 69
+    Width = 60
+    Height = 13
+    Caption = 'Raz'#227'o Social'
+  end
+  object Label3: TLabel [2]
+    Left = 477
+    Top = 69
+    Width = 41
+    Height = 13
+    Caption = 'Fantasia'
+  end
+  object Label4: TLabel [3]
+    Left = 8
+    Top = 118
+    Width = 25
+    Height = 13
+    Caption = 'CNPJ'
+  end
+  object Label5: TLabel [4]
+    Left = 159
+    Top = 118
+    Width = 68
+    Height = 13
+    Caption = 'Insc. Estadual'
+  end
+  object Label6: TLabel [5]
+    Left = 271
+    Top = 118
+    Width = 45
+    Height = 13
+    Caption = 'Endere'#231'o'
+  end
+  object Label7: TLabel [6]
+    Left = 8
+    Top = 163
+    Width = 33
+    Height = 13
+    Caption = 'Cidade'
+  end
+  object Label8: TLabel [7]
+    Left = 144
+    Top = 163
+    Width = 13
+    Height = 13
+    Caption = 'UF'
+  end
+  object Label9: TLabel [8]
+    Left = 224
+    Top = 163
+    Width = 69
+    Height = 13
+    Caption = 'Cod. Municipio'
+  end
+  inherited Panel1: TPanel
+    ExplicitWidth = 719
+    inherited BtnSalvar: TBitBtn
+      OnClick = nil
+    end
+  end
+  object Edit1: TEdit [10]
+    Left = 8
+    Top = 85
+    Width = 89
+    Height = 21
+    TabOrder = 1
+  end
+  object Edit2: TEdit [11]
+    Left = 103
+    Top = 85
+    Width = 368
+    Height = 21
+    TabOrder = 2
+  end
+  object Edit3: TEdit [12]
+    Left = 477
+    Top = 85
+    Width = 221
+    Height = 21
+    TabOrder = 3
+  end
+  object Edit4: TEdit [13]
+    Left = 8
+    Top = 133
+    Width = 145
+    Height = 21
+    TabOrder = 4
+  end
+  object Edit5: TEdit [14]
+    Left = 159
+    Top = 133
+    Width = 106
+    Height = 21
+    TabOrder = 5
+  end
+  object Edit6: TEdit [15]
+    Left = 271
+    Top = 133
+    Width = 427
+    Height = 21
+    TabOrder = 6
+  end
+  object Edit7: TEdit [16]
+    Left = 8
+    Top = 180
+    Width = 130
+    Height = 21
+    TabOrder = 7
+  end
+  object ComboBox1: TComboBox [17]
+    Left = 144
+    Top = 180
+    Width = 57
+    Height = 21
+    TabOrder = 8
+  end
+  object Edit8: TEdit [18]
+    Left = 224
+    Top = 180
+    Width = 130
+    Height = 21
+    TabOrder = 9
+  end
+  inherited FDTransaction1: TFDTransaction
+    Top = 9
+  end
+  inherited FDQuery1: TFDQuery
+    Top = 9
+  end
+end

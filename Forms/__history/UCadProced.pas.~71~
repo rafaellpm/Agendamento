@@ -1,0 +1,205 @@
+unit UCadProced;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, UCadPai, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  FireDAC.UI.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool, FireDAC.Phys,
+  FireDAC.Phys.FB, FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait, Vcl.StdCtrls,
+  Data.DB, FireDAC.Comp.Client, FireDAC.Comp.DataSet, Vcl.Buttons, Vcl.ExtCtrls,
+  Vcl.Grids, Vcl.DBGrids;
+
+type
+  TFrmCadProced = class(TFrmCadPai)
+    EdtNomeProc: TEdit;
+    CBAtivo: TComboBox;
+    Label2: TLabel;
+    DBGrid1: TDBGrid;
+    EdtCodProd: TEdit;
+    EdtDescProd: TEdit;
+    BtnInsereItem: TBitBtn;
+    Label1: TLabel;
+    Label3: TLabel;
+    EdtQtdProd: TEdit;
+    Label4: TLabel;
+    FDConsulta: TFDQuery;
+    DataSource1: TDataSource;
+    Label5: TLabel;
+    EdtCodInterno: TEdit;
+    procedure insereprocedimento;
+    procedure BtnSalvarClick(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure EdtCodProdKeyPress(Sender: TObject; var Key: Char);
+    procedure BtnInsereItemClick(Sender: TObject);
+    procedure insereitem_procedimento;
+    procedure excluirregistro_item;
+    procedure excluirregistro;
+    procedure BtnExcluirClick(Sender: TObject);
+    procedure consprocedimento(_codprocedimento : string);
+    procedure EdtCodInternoKeyPress(Sender: TObject; var Key: Char);
+
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmCadProced: TFrmCadProced;
+
+implementation
+
+uses
+  UConexao, UConsultaProced, UConsultaProduto;
+
+{$R *.dfm}
+
+procedure TFrmCadProced.BtnInsereItemClick(Sender: TObject);
+begin
+
+  sqlstr  := 'select * from procedimentos where codigo = ' + EdtCodInterno.Text;
+  if not ConsultaMySql(FDQuery1,sqlstr) then
+  begin
+    insereitem_procedimento;
+    insereprocedimento;
+  end
+  else
+    insereitem_procedimento;
+
+
+  consprocedimento(Trim(EdtCodInterno.Text));
+end;
+
+procedure TFrmCadProced.BitBtn2Click(Sender: TObject);
+begin
+  inherited;
+
+  FrmConsultaProced := TFrmConsultaProced.Create(self);
+  try
+    FrmConsultaProced.Tag := 1;
+    FrmConsultaProced.ShowModal;
+  finally
+    consprocedimento(Trim(EdtCodInterno.Text));
+    FreeAndNil(FrmConsultaProced);
+  end;
+end;
+
+procedure TFrmCadProced.BtnExcluirClick(Sender: TObject);
+begin
+  inherited;
+  excluirregistro_item;
+end;
+
+procedure TFrmCadProced.BtnSalvarClick(Sender: TObject);
+begin
+  inherited;
+  insereprocedimento;
+
+  EdtCodInterno.Text := '';
+  EdtCodProd.Text := '';
+  EdtQtdProd.Text := '';
+  EdtNomeProc.Text := '';
+  CBAtivo.ItemIndex := 0;
+
+end;
+
+procedure TFrmCadProced.consprocedimento(_codprocedimento: string);
+begin
+  FDConsulta.Close;
+  FDConsulta.SQL.Clear;
+  sqlstr := 'SELECT * FROM ITEM_PROCEDIMENTO AS I INNER JOIN PRODUTOS AS P ON I.COD_PRODUTO = P.ID_PRODUTO WHERE I.COD_PROCEDIMENTO =' + _CODPROCEDIMENTO;
+
+  ConsultaMySql(FDConsulta, sqlstr);
+
+end;
+
+procedure TFrmCadProced.EdtCodInternoKeyPress(Sender: TObject; var Key: Char);
+begin
+  inherited;
+  if trim(EdtCodInterno.Text) = '' then
+  begin
+    sqlstr  := 'select max(codigo)+1 as codigo from procedimentos';
+    if not ConsultaMySql(FDQuery1,sqlstr) then
+      EdtCodInterno.Text  := '1'
+    else
+      EdtCodInterno.Text  := FDQuery1.FieldByName('codigo').AsString;
+  end;
+end;
+
+procedure TFrmCadProced.EdtCodProdKeyPress(Sender: TObject; var Key: Char);
+begin
+  inherited;
+  FrmConsultaProduto := TFrmConsultaProduto.Create(self);
+  if (EdtNomeProc.Text <> '') then
+  begin
+    try
+      FrmCadProced.Tag := 0;
+      FrmConsultaProduto.ShowModal;
+    finally
+      FreeAndNil(FrmConsultaProduto);
+    end;
+  end
+  else
+    ShowMessage('Preencha os campos');
+end;
+
+procedure TFrmCadProced.excluirregistro;
+begin
+  FDQuery1.Close;
+  FDQuery1.SQL.Clear;
+  FDQuery1.SQL.Add('DELETE FROM PROCEDIMENTO WHERE CODIGO = ' + EdtCodInterno.Text);
+  FDQuery1.ExecSQL;
+end;
+end;
+
+procedure TFrmCadProced.excluirregistro_item;
+begin
+  FDQuery1.Close;
+  FDQuery1.SQL.Clear;
+  FDQuery1.SQL.Add('DELETE FROM ITEM_PROCEDIMENTO WHERE COD_PROCEDIMENTO = ' + EdtCodInterno.Text);
+  FDQuery1.ExecSQL;
+
+end;
+
+procedure TFrmCadProced.insereitem_procedimento;
+begin
+  inherited;
+  FDQuery1.Close;
+  FDQuery1.SQL.Clear;
+  FDQuery1.SQL.Add('INSERT INTO ITEM_PROCEDIMENTO');
+  FDQuery1.SQL.Add('(COD_PROCEDIMENTO, COD_PRODUTO, QTD_USO_PROCEDIMENTO)');
+  FDQuery1.SQL.Add('VALUES');
+  FDQuery1.SQL.Add('(:COD_PROCEDIMENTO, :COD_PRODUTO, :QTD_USO_PROCEDIMENTO)');
+  FDQuery1.Params.ParamByName('COD_PROCEDIMENTO').Value := EdtCodInterno.Text;
+  FDQuery1.Params.ParamByName('COD_PRODUTO').Value := StrToInt(EdtCodProd.Text);
+  FDQuery1.Params.ParamByName('QTD_USO_PROCEDIMENTO').Value := StrToInt(EdtQtdProd.Text);
+
+  FDQuery1.ExecSQL;
+
+  EdtCodProd.Text := '';
+  EdtQtdProd.Text := '';
+  EdtDescProd.Text := '';
+
+end;
+
+procedure TFrmCadProced.insereprocedimento;
+begin
+  FDQuery1.Close;
+  FDQuery1.SQL.Clear;
+  FDQuery1.SQL.Add('INSERT INTO PROCEDIMENTOS');
+  FDQuery1.SQL.Add('(DESCRICAO, ATIVO)');
+  FDQuery1.SQL.Add('VALUES');
+  FDQuery1.SQL.Add('(:DESCRICAO, :ATIVO)') ;
+  FDQuery1.Params.ParamByName('DESCRICAO').Value := EdtNomeProc.Text;
+  FDQuery1.Params.ParamByName('ATIVO').Value := CBAtivo.Text;
+
+  FDQuery1.ExecSQL;
+
+
+
+end;
+
+end.

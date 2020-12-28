@@ -1,0 +1,134 @@
+unit UCadProduto;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, UCadPai, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  Vcl.StdCtrls, Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client, Vcl.Buttons,
+  Vcl.ExtCtrls, FireDAC.UI.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool,
+  FireDAC.Phys, FireDAC.Phys.FB, FireDAC.Phys.FBDef, FireDAC.VCLUI.Wait;
+
+type
+  TFrmCadProd = class(TFrmCadPai)
+    EdtCodInterno: TEdit;
+    EdtDescricao: TEdit;
+    EdtCodBarras: TEdit;
+    EdtCodFornecedor: TEdit;
+    EdtDescForn: TEdit;
+    EdtDataCadastro: TEdit;
+    EdtModificacao: TEdit;
+    EdtEstoque: TEdit;
+    EdtCodDep: TEdit;
+    EdtNomeDep: TEdit;
+    Label1: TLabel;
+    Label2: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label7: TLabel;
+    Label8: TLabel;
+    Label9: TLabel;
+    Label10: TLabel;
+    EdtSubDep: TEdit;
+    Label11: TLabel;
+    EdtDescSub: TEdit;
+    Label12: TLabel;
+    CbTipoProd: TComboBox;
+    EdtCusto: TEdit;
+    EdtVenda: TEdit;
+    Label13: TLabel;
+    Label14: TLabel;
+    Label15: TLabel;
+    procedure inserirproduto;
+    procedure BtnSalvarClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure gerarcodigointerno;
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  FrmCadProd: TFrmCadProd;
+
+implementation
+
+uses
+  UConexao, UConsultaProduto;
+
+{$R *.dfm}
+
+procedure TFrmCadProd.BitBtn2Click(Sender: TObject);
+begin
+  inherited;
+  FrmConsultaProduto := TFrmConsultaProduto.Create(self);
+  try
+    FrmConsultaProduto.ShowModal;
+  finally
+    FreeAndNil(FrmConsultaProduto);
+  end;
+end;
+
+procedure TFrmCadProd.BtnSalvarClick(Sender: TObject);
+begin
+  inherited;
+  inserirproduto;
+end;
+
+procedure TFrmCadProd.FormShow(Sender: TObject);
+begin
+  inherited;
+  gerarcodigointerno;
+end;
+
+procedure TFrmCadProd.gerarcodigointerno;
+begin
+  sqlstr  := 'select max(id_produto)+1 as codigo from produtos';
+  if not ConsultaMySql(FDQuery1,sqlstr) then
+    EdtCodInterno.Text  := '1'
+  else
+    EdtCodInterno.Text  := FDQuery1.FieldByName('codigo').AsString;
+end;
+
+procedure TFrmCadProd.inserirproduto;
+begin
+  EdtDataCadastro.Text :=  DateToStr(Now);
+  EdtModificacao.Text :=  DateToStr(Now);
+  FDQuery1.close;
+  FDQuery1.SQL.Clear;
+  FDQuery1.SQL.Add('INSERT INTO PRODUTOS');
+  FDQuery1.SQL.Add('(ID_PRODUTO, DESCRICAO, COD_EAN, ID_FORNECEDOR, ID_DEPARTAMENTO, ID_SUBDEPARTAMENTO, QTD_ESTOQUE, TIPO_PRODUTO, PRECO_CUSTO, PRECO_VENDA, DATA_CADASTRO, ULTIMA_ALTERACAO)');
+  FDQuery1.SQL.Add('VALUES ');
+  FDQuery1.SQL.Add('(:ID_PRODUTO, :DESCRICAO, :COD_EAN, :ID_FORNECEDOR, :ID_DEPARTAMENTO, :ID_SUBDEPARTAMENTO, :QTD_ESTOQUE, :TIPO_PRODUTO, :PRECO_CUSTO, :PRECO_VENDA, :DATA_CADASTRO, :ULTIMA_ALTERACAO)');
+  FDQuery1.Params.ParamByName('ID_PRODUTO').Value := StrToInt(EdtCodInterno.Text);
+  FDQuery1.Params.ParamByName('DESCRICAO').Value := EdtDescricao.Text;
+  FDQuery1.Params.ParamByName('COD_EAN').Value := StrToInt(EdtCodBarras.Text);
+  FDQuery1.Params.ParamByName('ID_FORNECEDOR').Value := StrToInt(EdtCodFornecedor.Text);
+  FDQuery1.Params.ParamByName('ID_DEPARTAMENTO').Value := StrToInt(EdtCodDep.Text);
+  FDQuery1.Params.ParamByName('ID_SUBDEPARTAMENTO').Value := StrToInt(EdtSubDep.Text);
+  FDQuery1.Params.ParamByName('QTD_ESTOQUE').Value := StrToInt(EdtEstoque.Text);
+  FDQuery1.Params.ParamByName('TIPO_PRODUTO').Value := CbTipoProd.Text;
+  FDQuery1.Params.ParamByName('PRECO_CUSTO').Value := StrToInt(EdtCusto.Text);
+  FDQuery1.Params.ParamByName('PRECO_VENDA').Value := StrToInt(EdtVenda.Text);
+  FDQuery1.Params.ParamByName('DATA_CADASTRO').Value := EdtDataCadastro.Text;
+  FDQuery1.Params.ParamByName('ULTIMA_ALTERACAO').Value := EdtModificacao.Text;
+
+  FDQuery1.ExecSQL;
+
+  gerarcodigointerno;
+  EdtDescricao.Text := '';
+  EdtCodBarras.Text := '';
+  EdtCodFornecedor.Text := '';
+  EdtEstoque.Text := '1';
+  EdtCusto.Text := '';
+  EdtVenda.Text := '';
+  EdtModificacao.Text := '';
+end;
+
+end.

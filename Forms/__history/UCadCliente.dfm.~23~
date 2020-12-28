@@ -1,0 +1,221 @@
+inherited FrmCadCliente: TFrmCadCliente
+  Caption = 'Cadastro de Clientes'
+  ClientHeight = 224
+  ExplicitHeight = 263
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label2: TLabel [0]
+    Left = 11
+    Top = 68
+    Width = 56
+    Height = 13
+    Caption = 'Cod interno'
+  end
+  object Label1: TLabel [1]
+    Left = 107
+    Top = 68
+    Width = 27
+    Height = 13
+    Caption = 'Nome'
+  end
+  object Label3: TLabel [2]
+    Left = 604
+    Top = 68
+    Width = 14
+    Height = 13
+    Caption = 'RG'
+  end
+  object Label4: TLabel [3]
+    Left = 11
+    Top = 115
+    Width = 45
+    Height = 13
+    Caption = 'Endere'#231'o'
+  end
+  object Label5: TLabel [4]
+    Left = 483
+    Top = 115
+    Width = 33
+    Height = 13
+    Caption = 'Cidade'
+  end
+  object Label6: TLabel [5]
+    Left = 625
+    Top = 115
+    Width = 13
+    Height = 13
+    Caption = 'UF'
+  end
+  object Label7: TLabel [6]
+    Left = 419
+    Top = 115
+    Width = 11
+    Height = 13
+    Caption = 'Nr'
+  end
+  object Label8: TLabel [7]
+    Left = 11
+    Top = 163
+    Width = 28
+    Height = 13
+    Caption = 'E-mail'
+  end
+  object Label9: TLabel [8]
+    Left = 339
+    Top = 163
+    Width = 42
+    Height = 13
+    Caption = 'Telefone'
+  end
+  object Label10: TLabel [9]
+    Left = 586
+    Top = 163
+    Width = 68
+    Height = 13
+    Caption = 'Cod_municipio'
+  end
+  object Label11: TLabel [10]
+    Left = 455
+    Top = 163
+    Width = 70
+    Height = 13
+    Caption = 'Data Cadastro'
+  end
+  object Label12: TLabel [11]
+    Left = 450
+    Top = 68
+    Width = 19
+    Height = 13
+    Caption = 'CPF'
+  end
+  inherited Panel1: TPanel
+    inherited BtnSalvar: TBitBtn
+      OnClick = BtnSalvarClick
+    end
+  end
+  object EdtCodInterno: TEdit [13]
+    Left = 11
+    Top = 84
+    Width = 81
+    Height = 21
+    Enabled = False
+    TabOrder = 1
+    TextHint = 'Cod.Interno'
+  end
+  object EdtNome: TEdit [14]
+    Left = 107
+    Top = 84
+    Width = 337
+    Height = 21
+    TabOrder = 2
+  end
+  object EdtRG: TEdit [15]
+    Left = 604
+    Top = 84
+    Width = 90
+    Height = 21
+    NumbersOnly = True
+    TabOrder = 4
+  end
+  object EdtEndereco: TEdit [16]
+    Left = 11
+    Top = 131
+    Width = 398
+    Height = 21
+    TabOrder = 5
+  end
+  object EdtCidade: TEdit [17]
+    Left = 483
+    Top = 131
+    Width = 131
+    Height = 21
+    TabOrder = 7
+  end
+  object EdtNr_end: TEdit [18]
+    Left = 418
+    Top = 131
+    Width = 56
+    Height = 21
+    NumbersOnly = True
+    TabOrder = 6
+  end
+  object CbEstado: TComboBox [19]
+    Left = 625
+    Top = 131
+    Width = 69
+    Height = 21
+    ItemIndex = 26
+    TabOrder = 8
+    Text = 'TO'
+    Items.Strings = (
+      'AC'
+      'AL'
+      'AP'
+      'AM'
+      'BA'
+      'CE'
+      'DF'
+      'ES'
+      'GO'
+      'MA'
+      'MT'
+      'MS'
+      'MG'
+      'PA'
+      'PB'
+      'PR'
+      'PE'
+      'PI'
+      'RJ'
+      'RN'
+      'RS'
+      'RO'
+      'RR'
+      'SC'
+      'SP'
+      'SE'
+      'TO')
+  end
+  object EdtEmail: TEdit [20]
+    Left = 11
+    Top = 179
+    Width = 318
+    Height = 21
+    TabOrder = 9
+  end
+  object EdtTelefone: TEdit [21]
+    Left = 338
+    Top = 179
+    Width = 106
+    Height = 21
+    TabOrder = 10
+  end
+  object EdtDataCadastro: TEdit [22]
+    Left = 455
+    Top = 179
+    Width = 119
+    Height = 21
+    Enabled = False
+    TabOrder = 11
+  end
+  object EdtCodMun: TEdit [23]
+    Left = 586
+    Top = 179
+    Width = 108
+    Height = 21
+    NumbersOnly = True
+    TabOrder = 12
+  end
+  object EdtCPF: TEdit [24]
+    Left = 450
+    Top = 84
+    Width = 148
+    Height = 21
+    NumbersOnly = True
+    TabOrder = 3
+  end
+  inherited FDQuery1: TFDQuery
+    Left = 451
+    Top = 9
+  end
+end
